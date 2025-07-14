@@ -87,22 +87,7 @@ Use CUDA Events:
 
 ---
 
-### Step 9 – Profile with Nsight Tools (Optional)
-
-Use either:
-
-- `nsys` (Nsight Systems) for host-device timeline
-- `ncu` (Nsight Compute) for memory and occupancy analysis
-
-**What to look for:**
-
-- Memory throughput
-- Occupancy
-- Execution time per kernel
-
----
-
-### Step 10 – Clean Up
+### Step 9 – Clean Up
 
 Don’t forget to:
 
@@ -118,15 +103,9 @@ Don’t forget to:
 ## Extra (Optional)
 
 - Implement a CPU version and compare timing.
+> The CPU version takes 0.77 ms in average of several times.
+> The GPU version takes 0.17 ms in average of several times.
 - Try unified memory (`cudaMallocManaged`).
-- Analyze memory coalescing behavior.
+> The unified version takes 7 ms in average of several times.
 - Try float4 instead of float for better throughput.
-
----
-
-## Final Deliverables
-
-1. Source code (`main.cu`)
-2. Compilation method (CMake, Makefile, or Visual Studio project)
-3. Results (execution time, graphs, observations)
-4. Discussion (coalescing, block size tuning, bottlenecks)
+> The float4 version takes 0.15 ms in average of several times.
