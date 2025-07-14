@@ -68,10 +68,6 @@ Call your kernel with `<<<gridDim, blockDim>>>` syntax.
 
 Use `cudaMemcpy` to copy the result vector C from device to host.
 
-**After copying back:**
-
-- Optionally verify correctness (e.g., C[i] == A[i] + B[i])
-
 ---
 
 ### Step 8 – Measure Performance
