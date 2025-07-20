@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.18)
 
 # Project definition
-project(harris LANGUAGES CXX CUDA)
+project(matri_mult LANGUAGES CXX CUDA)
 
 # Set C++ and CUDA standards
 set(CMAKE_CXX_STANDARD 20)
@@ -59,22 +59,21 @@ message(STATUS "CUDA version: ${CUDAToolkit_VERSION}")
 
 # Define source files
 set(SOURCES
-    src/HarrisCornerDetector.cpp
+    src/matri_mult.cu
     # Add CUDA files here
-    # src/harris_kernels.cu
+    # src/matri_mult_kernels.cu
 )
 
 set(HEADERS
-    include/HarrisCornerDetector.hpp
     # Add CUDA headers here
-    # include/harris_kernels.cuh
+    # include/matri_mult_kernels.cuh
 )
 
 # Create executable
-add_executable(harris ${SOURCES} ${HEADERS})
+add_executable(matri_mult ${SOURCES} ${HEADERS})
 
 # Set target properties
-set_target_properties(harris PROPERTIES
+set_target_properties(matri_mult PROPERTIES
     CUDA_SEPARABLE_COMPILATION ON
     CUDA_ARCHITECTURES ${CMAKE_CUDA_ARCHITECTURES}
     # Use dynamic runtime for better compatibility with vcpkg
@@ -82,7 +81,7 @@ set_target_properties(harris PROPERTIES
 )
 
 # Include directories
-target_include_directories(harris PRIVATE
+target_include_directories(matri_mult PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${OpenCV_INCLUDE_DIRS}
 )
@@ -90,7 +89,7 @@ target_include_directories(harris PRIVATE
 
 
 # Compiler-specific options
-target_compile_options(harris PRIVATE
+target_compile_options(matri_mult PRIVATE
     # MSVC C++ options
     $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:MSVC>>:
         /W4          # Warning level 4
@@ -159,7 +158,7 @@ target_compile_options(harris PRIVATE
     >
 )
 
-target_link_options(harris PRIVATE
+target_link_options(matri_mult PRIVATE
     # Debug linking options
     $<$<CONFIG:Debug>:
         $<$<CXX_COMPILER_ID:MSVC>:/DEBUG:FULL>
@@ -172,14 +171,14 @@ target_link_options(harris PRIVATE
 )
 
 # Link libraries
-target_link_libraries(harris PRIVATE
+target_link_libraries(matri_mult PRIVATE
     # OpenCV libraries
     ${OpenCV_LIBS}
     
     # CUDA libraries (add as needed)
     CUDA::cudart
     CUDA::cuda_driver
-    # CUDA::cublas      # If you need BLAS
+    CUDA::cublas
     # CUDA::curand      # If you need random numbers
     # CUDA::cufft       # If you need FFT
 )
@@ -187,27 +186,27 @@ target_link_libraries(harris PRIVATE
 # Optional: Add custom commands for better development experience
 if(WIN32)
     # Copy OpenCV DLLs to output directory (if using dynamic linking)
-    add_custom_command(TARGET harris POST_BUILD
+    add_custom_command(TARGET matri_mult POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:opencv_core>
-        $<TARGET_FILE_DIR:harris>
+        $<TARGET_FILE_DIR:matri_mult>
     )
-    add_custom_command(TARGET harris POST_BUILD
+    add_custom_command(TARGET matri_mult POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:opencv_highgui>
-        $<TARGET_FILE_DIR:harris>
+        $<TARGET_FILE_DIR:matri_mult>
     )
 endif()
 
-add_custom_command(TARGET harris POST_BUILD
+add_custom_command(TARGET matri_mult POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${CMAKE_CURRENT_SOURCE_DIR}/data"
-    "$<TARGET_FILE_DIR:harris>/data"
+    "$<TARGET_FILE_DIR:matri_mult>/data"
     COMMENT "Copying data folder..."
 )
 
 # Optional: Installation rules
-install(TARGETS harris
+install(TARGETS matri_mult
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
