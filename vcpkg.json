@@ -1,0 +1,16 @@
+{
+  "name": "roadmap",
+  "version-string": "1.0.0",
+  "dependencies": [
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "cuda",
+        "highgui",
+        "eigen"
+      ]
+    }
+  ],
+  "builtin-baseline": "6df3270abdba60f18ec48308dbd72ece94729e1e"
+}
